@@ -1,0 +1,24 @@
+---
+- name: master
+  box: trombik/ansible-ubuntu-20.04-amd64
+  hostname: master
+  ipaddress: 10.17.1.10
+  memory: 3072
+  cpus: 1
+  provision: provision/ansible/master.yaml
+
+- name: node1
+  box: trombik/ansible-ubuntu-20.04-amd64
+  hostname: node1
+  ipaddress: 10.17.1.11
+  memory: 1536
+  cpus: 1
+  provision: provision/ansible/node1.yaml
+
+- name: node2
+  box: trombik/ansible-ubuntu-20.04-amd64
+  hostname: node2
+  ipaddress: 10.17.1.12
+  memory: 1536
+  cpus: 1
+  provision: provision/ansible/node2.yaml

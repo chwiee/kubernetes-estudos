@@ -1,0 +1,52 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - 10.17.1.10 master
+        - 10.17.1.11 node1
+        - 10.17.1.12 node2
+
+    - name: Instalando pacotes de dependencias Kubernetes
+      apt:
+        name: ['unzip', 'wget', 'elinks', 'rsync', 'git', 'vim']
+
+    - name: Adicionar usuario wb com permissao ROOT
+      user:
+        name: wb
+        shell: /bin/bash
+        password : 123456
+
+    - name: Modificando o sudoers para o usuario wb
+      copy:
+        src: files/wbuser
+        dest: /etc/sudoers.d
+        mode: 0644
+
+    - name: Cria o diretório .ssh
+      file:
+        path: /root/.ssh
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+        
+    - name: Criando o arquivo authorized_keys
+      copy:
+        src: files/authorized_keys
+        dest: /root/.ssh/authorized_keys
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Disable the ufw firewall
+      service:
+        name: ufw
+        state: stopped
+        enabled: false
